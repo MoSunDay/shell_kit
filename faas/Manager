@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+hostname="127.0.0.1"
+if [ "$1x" == "x" -a "$2x" == "x" ];then
+    curl -s --connect-timeout 1 -m 3  http://${hostname}/index.txt | sh
+
+elif [ "$2x" == "x" ];then
+    curl -s --connect-timeout 1 -m 3  http://${hostname}/"$1"/index.txt | sh
+else
+    curl -s --connect-timeout 1 -m 3  http://${hostname}/"$1"/"$2".txt | sh
+fi
