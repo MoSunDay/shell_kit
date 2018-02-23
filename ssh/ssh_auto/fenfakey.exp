@@ -1,0 +1,23 @@
+#!/usr/bin/expect
+if { $argc != 4 } {
+    send_user "usage: expect scp-expect.exp file host dir\n"
+        exit
+}
+set host [lindex $argv 0]
+set user [lindex $argv 1]
+set password [lindex $argv 2]
+set port [lindex $argv 3]
+
+if { $user != "root"} {
+	spawn ssh-copy-id -p $port -i /home/$user/.ssh/id_dsa.pub $user@$host
+} else {
+    spawn ssh-copy-id -p $port -i /$user/.ssh/id_dsa.pub $user@$host
+}
+
+expect {
+    -timeout 3
+        "yes/no"	    { exp_send "yes\r"; exp_continue }
+        "*password:"    { exp_send "$password\r" }
+        timeout		    { puts "expect was timeout by m."; return }
+}
+expect eof
